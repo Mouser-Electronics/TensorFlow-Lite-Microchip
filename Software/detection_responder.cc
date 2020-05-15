@@ -14,6 +14,8 @@ limitations under the License.
 ==============================================================================*/
 
 #include "tensorflow/lite/micro/examples/person_detection/detection_responder.h"
+#include <hal_gpio.h>
+#include <hal_delay.h>
 
 // This dummy implementation writes person and no person scores to the error
 // console. Real applications will want to take some custom action instead, and
@@ -22,4 +24,12 @@ void RespondToDetection(tflite::ErrorReporter* error_reporter,
                         uint8_t person_score, uint8_t no_person_score) {
   TF_LITE_REPORT_ERROR(error_reporter, "person score:%d no person score %d",
                        person_score, no_person_score);
+  //If the NN returns a person_score that is greater than the no_person_score, turn the LED on...   
+  if(person_score > no_person_score) {
+	gpio_set_pin_level(LED0, true);
+  }
+  //...otherwise turn the LED off.
+  else {
+	gpio_set_pin_level(LED0, false);
+  }
 }
